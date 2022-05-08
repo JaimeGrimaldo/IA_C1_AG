@@ -108,8 +108,8 @@ def proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice):
     else:
         int(num_puntos)
         print("+ Numero de puntos",num_puntos)
-        #calcularBits(num_puntos, poblacion_inicial,indice)
-        transformarIndividuos(num_puntos, poblacion_inicial, indice, intervalo)
+        calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
+        #transformarIndividuos(num_puntos, poblacion_inicial, indice, intervalo)
 
 def decimal_a_binario(num_puntos):
     a = num_puntos
@@ -125,6 +125,7 @@ def decimal_a_binario(num_puntos):
 
 def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
     individuos = []
+    individuo = ""
     numBits = decimal_a_binario(num_puntos)
     print("+ Se ocuparán:",numBits,"bits")
 
@@ -139,49 +140,19 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
         indiceMax = int(splitIndice[1])
 
     print("+ Indice de:",indiceMin,"a:",indiceMax)
+
     for i in range(int(poblacion_inicial)):
-        randiNum = random.randrange(indiceMin, indiceMax, 1)
-        individuos.append(randiNum)
-    return individuos, numBits
-
-def transformarIndividuos(num_puntos, poblacion_inicial, indice, intervalo):
-    lista_individuos, numBits = calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
-    convertidos = []
-    print("+ Lista de individuos:",lista_individuos)
-
-    for i in range(len(lista_individuos)):
-        if lista_individuos[i] <= 0:
-            return "0"
-        binario = ""
-        while lista_individuos[i] > 0:
-            residuo = int(lista_individuos[i] % 2)
-            lista_individuos[i] = int(lista_individuos[i] / 2)
-            binario = str(residuo) + binario
-        convertidos.append(binario)
-    print("+ Individuos convertidos:",convertidos)
-    print("+ Numero de bits:",numBits)
-
-    #Rellenar bitaje
-    for i in range(len(convertidos)):
-        if len(convertidos[i]) < numBits:
-            print("- Este requiere relleno:",convertidos[i])
-            rellenar = convertidos[i]
-            relleno = "0"
-            diferencia = numBits - len(rellenar)
-            for i in range(diferencia):
-                if diferencia == 1:
-                    arreglado = relleno + rellenar
-                    print("+ Numero corregido:",arreglado)
-                else:
-                    relleno += relleno
-                    arreglado = relleno + rellenar
-                    print("+ Numero corregido:",arreglado)
-
-    
-    
-
-
-    
+        for i in range(int(numBits)):
+            bandera_random = bool(random.randint(0,1))
+            if bandera_random:
+                individuo += "1"
+            else:
+                individuo += "0"
+        print("+ Individuo generado:",individuo)
+        int(individuo)
+        individuos.append(individuo)
+        individuo = ""
+    print("+ Individuos generados:",individuos)
 
     
 
