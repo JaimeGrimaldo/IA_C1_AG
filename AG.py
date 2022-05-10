@@ -71,13 +71,6 @@ def extraerDatos():
     else:
         print("> ERROR: Hay problemas con los datos de entrada, no es posible avanzar con el AG.")
 
-    '''''
-    print("Esto tiene Población inicial:",poblacion_inicial)
-    print("Esto tiene Población maxima:",poblacion_maxima)
-    print("Esto tiene intervalo:",intervalo)
-    print("Esto tiene precision:",precision)
-    '''''
-
 def validarDatos(poblacion_maxima, poblacion_inicial):
     poblacion1_correcta = False
     poblacion2_correcta = False
@@ -103,13 +96,14 @@ def proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice):
     
     num_puntos = (rango/float(precision)) + 1
     if num_puntos < 0:
-        print(">ERROR: El rango no es válido.")
+        print("> ERROR: El rango no es válido.")
         messagebox.showinfo(message="La cantidad de puntos es negativa, verificar el intervalo", title="VENTANA DE ERROR")
     else:
         int(num_puntos)
         print("+ Numero de puntos",num_puntos)
-        calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
-        #transformarIndividuos(num_puntos, poblacion_inicial, indice, intervalo)
+        #calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
+        #seleccion(num_puntos, poblacion_inicial, indice, intervalo)
+        cruzar(num_puntos, poblacion_inicial, indice, intervalo)
 
 def decimal_a_binario(num_puntos):
     a = num_puntos
@@ -128,7 +122,6 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
     individuo = ""
     numBits = decimal_a_binario(num_puntos)
     print("+ Se ocuparán:",numBits,"bits")
-
     if indice == "":
         print("- No se detecto Indice, se usará el intervalo")
         splitIntervalo = intervalo.split(",")
@@ -138,9 +131,7 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
         splitIndice = indice.split(",")
         indiceMin = int(splitIndice[0])
         indiceMax = int(splitIndice[1])
-
     print("+ Indice de:",indiceMin,"a:",indiceMax)
-
     for i in range(int(poblacion_inicial)):
         for i in range(int(numBits)):
             bandera_random = bool(random.randint(0,1))
@@ -148,11 +139,53 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
                 individuo += "1"
             else:
                 individuo += "0"
-        print("+ Individuo generado:",individuo)
+        #print("+ Individuo generado:",individuo)
         int(individuo)
         individuos.append(individuo)
         individuo = ""
-    print("+ Individuos generados:",individuos)
+    return individuos, numBits
+
+def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
+    lista_individuos, numBits = calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
+    separador = random.randint(1,numBits)
+    parejas = []
+    contador_coincidencias = 0
+    print("+ Lista de individuos generados:",lista_individuos)
+
+    #Generar turnos
+    tamaño_individuos = len(lista_individuos)
+    for i in range(tamaño_individuos):
+        indice1 = random.randint(0,tamaño_individuos-1)
+        indice2 = random.randint(0,tamaño_individuos-1)
+        if indice1 == indice2:
+            contador_coincidencias +=1
+            print("- Coincidieron indices",contador_coincidencias,"veces")
+        else:
+           # print("+ Individuo",lista_individuos[indice1], "con individuo",lista_individuos[indice2])
+            unir = lista_individuos[indice1] + "-" + lista_individuos[indice2]
+            parejas.append(unir)
+    return parejas, separador
+
+def cruzar(num_puntos, poblacion_inicial, indice, intervalo):
+    lista_parejas, indicador_separador = seleccion(num_puntos, poblacion_inicial, indice, intervalo)
+    print("+ Lista de parejas:",lista_parejas)
+    print("+ Se va a separar a partir de:",indicador_separador)
+    
+
+    for i in range(len(lista_parejas)):
+        hijo= ""
+        preparar_parejas = lista_parejas.split("-")
+        padre1 = preparar_parejas[i]
+        padre2 = preparar_parejas[i]
+        
+
+
+
+
+
+
+
+
 
     
 
