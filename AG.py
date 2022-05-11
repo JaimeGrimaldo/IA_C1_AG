@@ -169,6 +169,8 @@ def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
 
 def cruzar():
     global parejas, bitaje
+    hijosAB1 = []
+    hijosAB2 = []
     print("+ Lista de parejas:",parejas)
     print("+ El bitaje es:",bitaje)
     separador = random.randint(1,bitaje)
@@ -183,7 +185,13 @@ def cruzar():
         a = prepararParejas[0]
         b = prepararParejas[1]
         print("+ Cruza AB1:",a[0:separador],"-",b[separador:bitaje])
+        ab1 = a[0:separador] + b[separador:bitaje]
+        ab2 = b[0:separador] + a[separador:bitaje]
+        hijosAB1.append(ab1)
+        hijosAB2.append(ab2)
         print("+ Cruza AB2:",b[0:separador],"-",a[separador:bitaje])
+    print("+ Cruzas AB1", hijosAB1)
+    print("+ Cruzas AB2", hijosAB2)
         
 
 
