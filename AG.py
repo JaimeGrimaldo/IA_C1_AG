@@ -23,7 +23,7 @@ e_precision = Entry(ventana, font=("Arial 18"))
 e_precision.grid(row=4, column=1, columnspan=1, padx=5, pady=5)
 
 e_indice = Entry(ventana, font=("Arial 18"))
-e_indice.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
+#e_indice.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
 
 #Etiquetas
 texto_1 = Label(ventana, font=("Bebas 20"), text="Algoritmo Genetico - Max Min")
@@ -41,8 +41,8 @@ texto_PMaxima.grid(row=3, column=0, padx=5, pady=5)
 texto_precision = Label(ventana, font=("Arial 18"), text="Precisión:")
 texto_precision.grid(row=4, column=0, padx=5, pady=5)
 
-texto_indice = Label(ventana, font=("Arial 18"), text="Indice:")
-texto_indice.grid(row=5, column=0, padx=5, pady=5)
+#texto_indice = Label(ventana, font=("Arial 18"), text="Indice:")
+#texto_indice.grid(row=5, column=0, padx=5, pady=5)
 
 texto_vacio = Label(ventana, font=("Arial 8"), text=" ")
 texto_vacio.grid(row=6, column=0, padx=5, pady=1)
@@ -171,6 +171,22 @@ def cruzar():
     global parejas, bitaje
     print("+ Lista de parejas:",parejas)
     print("+ El bitaje es:",bitaje)
+    separador = random.randint(1,bitaje)
+    #Fragmentar individuos
+    while separador == bitaje:
+        separador = random.randint(1,bitaje)
+    #Cruzar
+    print("+ Se separará en el bit:",separador)
+    for i in range(len(parejas)):
+        prepararParejas = parejas[i].split("-")
+        print("+ Preparar parejas:",prepararParejas)
+        a = prepararParejas[0]
+        b = prepararParejas[1]
+        print("+ Cruza AB1:",a[0:separador],"-",b[separador:bitaje])
+        print("+ Cruza AB2:",b[0:separador],"-",a[separador:bitaje])
+        
+
+
 
         
 
