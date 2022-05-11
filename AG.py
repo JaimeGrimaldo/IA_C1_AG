@@ -51,9 +51,10 @@ texto_vacio.grid(row=6, column=0, padx=5, pady=1)
 boton_iniciar = Button(ventana, text="INICIAR", width=10, height=1, font=("Arial 18"), command = lambda: extraerDatos())
 boton_iniciar.grid(row=7, column=0, columnspan=2)
 
-#Banderas
+#Variables
 correr_programa = False
-
+parejas = []
+bitaje = 0
 def extraerDatos():
     poblacion_inicial = e_poblacionInicial.get()
     poblacion_maxima = e_poblacionMaxima.get()
@@ -102,8 +103,9 @@ def proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice):
         int(num_puntos)
         print("+ Numero de puntos",num_puntos)
         #calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
-        #seleccion(num_puntos, poblacion_inicial, indice, intervalo)
-        cruzar(num_puntos, poblacion_inicial, indice, intervalo)
+        seleccion(num_puntos, poblacion_inicial, indice, intervalo)
+        cruzar()
+        #cruzar(num_puntos, poblacion_inicial, indice, intervalo)
 
 def decimal_a_binario(num_puntos):
     a = num_puntos
@@ -147,8 +149,8 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
 
 def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
     lista_individuos, numBits = calcularBits(num_puntos, poblacion_inicial, indice, intervalo)
-    separador = random.randint(1,numBits)
-    parejas = []
+    global parejas, bitaje
+    bitaje = numBits
     contador_coincidencias = 0
     print("+ Lista de individuos generados:",lista_individuos)
 
@@ -164,19 +166,12 @@ def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
            # print("+ Individuo",lista_individuos[indice1], "con individuo",lista_individuos[indice2])
             unir = lista_individuos[indice1] + "-" + lista_individuos[indice2]
             parejas.append(unir)
-    return parejas, separador
 
-def cruzar(num_puntos, poblacion_inicial, indice, intervalo):
-    lista_parejas, indicador_separador = seleccion(num_puntos, poblacion_inicial, indice, intervalo)
-    print("+ Lista de parejas:",lista_parejas)
-    print("+ Se va a separar a partir de:",indicador_separador)
-    
+def cruzar():
+    global parejas, bitaje
+    print("+ Lista de parejas:",parejas)
+    print("+ El bitaje es:",bitaje)
 
-    for i in range(len(lista_parejas)):
-        hijo= ""
-        preparar_parejas = lista_parejas.split("-")
-        padre1 = preparar_parejas[i]
-        padre2 = preparar_parejas[i]
         
 
 
