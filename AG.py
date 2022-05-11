@@ -23,7 +23,9 @@ e_precision = Entry(ventana, font=("Arial 18"))
 e_precision.grid(row=4, column=1, columnspan=1, padx=5, pady=5)
 
 e_indice = Entry(ventana, font=("Arial 18"))
+e_mutacion = Entry(ventana, font=("Arial 12"))
 #e_indice.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
+e_mutacion.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
 
 #Etiquetas
 texto_1 = Label(ventana, font=("Bebas 20"), text="Algoritmo Genetico - Max Min")
@@ -41,8 +43,8 @@ texto_PMaxima.grid(row=3, column=0, padx=5, pady=5)
 texto_precision = Label(ventana, font=("Arial 18"), text="Precisión:")
 texto_precision.grid(row=4, column=0, padx=5, pady=5)
 
-#texto_indice = Label(ventana, font=("Arial 18"), text="Indice:")
-#texto_indice.grid(row=5, column=0, padx=5, pady=5)
+texto_indice = Label(ventana, font=("Arial 12"), text="Prob. Mutar:")
+texto_indice.grid(row=5, column=0, padx=5, pady=5)
 
 texto_vacio = Label(ventana, font=("Arial 8"), text=" ")
 texto_vacio.grid(row=6, column=0, padx=5, pady=1)
@@ -125,7 +127,7 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
     numBits = decimal_a_binario(num_puntos)
     print("+ Se ocuparán:",numBits,"bits")
     if indice == "":
-        print("- No se detecto Indice, se usará el intervalo")
+        #print("- No se detecto Indice, se usará el intervalo")
         splitIntervalo = intervalo.split(",")
         indiceMin = int(splitIntervalo[0])
         indiceMax = int(splitIntervalo[1])
@@ -169,6 +171,7 @@ def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
 
 def cruzar():
     global parejas, bitaje
+    pm = e_mutacion.get()
     hijosAB1 = []
     hijosAB2 = []
     print("+ Lista de parejas:",parejas)
@@ -187,11 +190,42 @@ def cruzar():
         print("+ Cruza AB1:",a[0:separador],"-",b[separador:bitaje])
         ab1 = a[0:separador] + b[separador:bitaje]
         ab2 = b[0:separador] + a[separador:bitaje]
-        hijosAB1.append(ab1)
-        hijosAB2.append(ab2)
+        hijosAB1.append(ab1) #Capturar hijos AB1
+        hijosAB2.append(ab2) #Capturar hijos AB2
         print("+ Cruza AB2:",b[0:separador],"-",a[separador:bitaje])
     print("+ Cruzas AB1", hijosAB1)
     print("+ Cruzas AB2", hijosAB2)
+    for i in range(len(hijosAB1)):
+        prob_mutacion = random.uniform(0,1)
+        if prob_mutacion <= float(pm):
+            #print("+",hijosAB1[i],"MUTA")
+            #print("+ Probabilidad de mutacion:",prob_mutacion)
+            mutar_individuo = hijosAB1[i]
+            mutacion(mutar_individuo)
+
+def mutacion(mutar):
+    guardar = ""
+    print("+ Hola acá vamos a mutar a:",mutar)
+    print(type(mutar))
+    print("Tamaño mutar:",len(mutar))
+    print("+ A:",mutar[0],mutar[1],mutar[2])
+    for i in range(len(mutar)):
+        print("+ I del for:",i)
+        if mutar[i] == "1":
+          muatarString = "".join(mutar[i])
+          muatarString = muatarString.replace("1","0")
+          guardar = guardar + muatarString
+
+        else:
+            if mutar[i] == "0":
+                muatarString = "".join(mutar[i])
+                muatarString = muatarString.replace("0","1")
+                guardar = guardar + muatarString
+    print("+ Se ha transformado en:",mutar, " a el valor de ",guardar)
+
+
+def poda():
+    pass
         
 
 
