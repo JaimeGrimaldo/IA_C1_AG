@@ -206,11 +206,7 @@ def cruzar():
 def mutacion(mutar):
     guardar = ""
     print("+ Hola acá vamos a mutar a:",mutar)
-    print(type(mutar))
-    print("Tamaño mutar:",len(mutar))
-    print("+ A:",mutar[0],mutar[1],mutar[2])
     for i in range(len(mutar)):
-        print("+ I del for:",i)
         if mutar[i] == "1":
           muatarString = "".join(mutar[i])
           muatarString = muatarString.replace("1","0")
@@ -221,8 +217,10 @@ def mutacion(mutar):
                 muatarString = "".join(mutar[i])
                 muatarString = muatarString.replace("0","1")
                 guardar = guardar + muatarString
-    print("+ Se ha transformado en:",mutar, " a el valor de ",guardar)
+    print("+ Se ha transformado en:",guardar)
 
+def limpieza():
+    pass
 
 def poda():
     pass

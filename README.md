@@ -1,8 +1,14 @@
 # IA_C1_AG
 
-Software propiedad de Jaime Eduardo Grimaldo Moreno. (Intento de Inteligencia Artificial).
-Matricula de alumno: 191214
-Universidad: Universidad Politecnica de Chiapas
-Cuatrimestre del alumno: 11
+## Inteligencia Artificial
+Construccion de algoritmo genetico con maximos y minimos
 
-Si tu computadora explotá en el proceso de ejecución de mi Software, no me hago responsable c:
+### Autor
+Jaime Eduardo Grimaldo Moreno
+
+#### Universidad Politecnica de Chiapas
+Matricula del alumno: 191214
+Cuatrimestre: 11
+
+#### Advertencia
+Si tu computadora explota al tratar de correr este Software, no es mi culpa uwu
