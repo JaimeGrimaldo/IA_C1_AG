@@ -23,9 +23,12 @@ e_precision = Entry(ventana, font=("Arial 18"))
 e_precision.grid(row=4, column=1, columnspan=1, padx=5, pady=5)
 
 e_indice = Entry(ventana, font=("Arial 18"))
+
+e_indice1 = Entry(ventana, font=("Arial 12"))
 e_mutacion = Entry(ventana, font=("Arial 12"))
 #e_indice.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
 e_mutacion.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
+e_indice1.grid(row=6, column=1, columnspan=1, padx=5, pady=5)
 
 #Etiquetas
 texto_1 = Label(ventana, font=("Bebas 20"), text="Algoritmo Genetico - Max Min")
@@ -46,8 +49,11 @@ texto_precision.grid(row=4, column=0, padx=5, pady=5)
 texto_indice = Label(ventana, font=("Arial 12"), text="Prob. Mutar:")
 texto_indice.grid(row=5, column=0, padx=5, pady=5)
 
+texto_indice1 = Label(ventana, font=("Arial 12"), text="IE:")
+texto_indice1.grid(row=6, column=0, padx=5, pady=5)
+
 texto_vacio = Label(ventana, font=("Arial 8"), text=" ")
-texto_vacio.grid(row=6, column=0, padx=5, pady=1)
+texto_vacio.grid(row=7, column=0, padx=5, pady=1)
 
 #Boton 
 boton_iniciar = Button(ventana, text="INICIAR", width=10, height=1, font=("Arial 18"), command = lambda: extraerDatos())
@@ -57,6 +63,10 @@ boton_iniciar.grid(row=7, column=0, columnspan=2)
 correr_programa = False
 parejas = []
 bitaje = 0
+hijosMutados = []
+hijosAB1 = []
+hijosAB2 = []
+individuos = []
 def extraerDatos():
     poblacion_inicial = e_poblacionInicial.get()
     poblacion_maxima = e_poblacionMaxima.get()
@@ -122,7 +132,7 @@ def decimal_a_binario(num_puntos):
     return len(binario)
 
 def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
-    individuos = []
+    global individuos
     individuo = ""
     numBits = decimal_a_binario(num_puntos)
     print("+ Se ocuparán:",numBits,"bits")
@@ -170,10 +180,9 @@ def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
             parejas.append(unir)
 
 def cruzar():
-    global parejas, bitaje
+    global parejas, bitaje, hijosMutados, hijosAB1, hijosAB2
     pm = e_mutacion.get()
-    hijosAB1 = []
-    hijosAB2 = []
+
     print("+ Lista de parejas:",parejas)
     print("+ El bitaje es:",bitaje)
     separador = random.randint(1,bitaje)
@@ -202,8 +211,18 @@ def cruzar():
             #print("+ Probabilidad de mutacion:",prob_mutacion)
             mutar_individuo = hijosAB1[i]
             mutacion(mutar_individuo)
+    for i in range(len(hijosAB2)):
+        prob_mutacion = random.uniform(0,1)
+        if prob_mutacion <= float(pm):
+            #print("+",hijosAB1[i],"MUTA")
+            #print("+ Probabilidad de mutacion:",prob_mutacion)
+            mutar_individuo = hijosAB2[i]
+            mutacion(mutar_individuo)
+    print("Estos son todos los mutados:",hijosMutados)
+    limpieza()
 
 def mutacion(mutar):
+    global hijosMutados
     guardar = ""
     print("+ Hola acá vamos a mutar a:",mutar)
     for i in range(len(mutar)):
@@ -218,9 +237,50 @@ def mutacion(mutar):
                 muatarString = muatarString.replace("0","1")
                 guardar = guardar + muatarString
     print("+ Se ha transformado en:",guardar)
+    hijosMutados.append(guardar)
 
 def limpieza():
-    pass
+    global hijosMutados, hijosAB1, hijosAB2, individuos
+    
+    iE = e_indice1.get()
+    print("\n")
+    print("+ Individuos iniciales:",individuos)
+    print("+ Hijos AB1:",hijosAB1)
+    print("+ Hijos AB2:",hijosAB2)
+    print("+ Mutados:",hijosMutados)
+
+    for i in range(len(hijosMutados)):
+        numDecimal = binario_a_decimal(hijosMutados[i])
+        if numDecimal > int(iE):
+            print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
+            hijosMutados.remove(i)
+
+    for i in range(len(hijosAB1)):
+        numDecimal = binario_a_decimal(hijosAB1[i])
+        if numDecimal > int(iE):
+            print("- El numero",hijosAB1[i],"excede el limite con decimal",numDecimal)
+            hijosAB1.remove(i)
+
+    for i in range(len(hijosAB2)):
+        numDecimal = binario_a_decimal(hijosAB2[i])
+        if numDecimal > int(iE):
+            print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
+            hijosAB2.remove(i)
+
+    print("\n")
+    print("+ Hijos limpios AB1:",hijosAB1)
+    print("+ Hijos limpios AB2:",hijosAB2)
+    print("+ Mutados limpios:",hijosMutados)
+
+def binario_a_decimal(numero_binario):
+	numero_decimal = 0 
+
+	for posicion, digito_string in enumerate(numero_binario[::-1]):
+		numero_decimal += int(digito_string) * 2 ** posicion
+
+	return numero_decimal
+
+
 
 def poda():
     pass
