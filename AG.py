@@ -249,28 +249,29 @@ def limpieza():
     print("+ Hijos AB2:",hijosAB2)
     print("+ Mutados:",hijosMutados)
 
-    for i in range(len(hijosMutados)):
+    for i in range(len(hijosMutados)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosMutados[i])
         if numDecimal > int(iE):
             print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
-            hijosMutados.remove(i)
+            hijosMutados.pop(i)
 
-    for i in range(len(hijosAB1)):
+    for i in range(len(hijosAB1)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosAB1[i])
         if numDecimal > int(iE):
             print("- El numero",hijosAB1[i],"excede el limite con decimal",numDecimal)
-            hijosAB1.remove(i)
+            hijosAB1.pop(i)
 
-    for i in range(len(hijosAB2)):
+    for i in range(len(hijosAB2)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosAB2[i])
         if numDecimal > int(iE):
             print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
-            hijosAB2.remove(i)
+            hijosAB2.pop(i)
 
     print("\n")
     print("+ Hijos limpios AB1:",hijosAB1)
     print("+ Hijos limpios AB2:",hijosAB2)
     print("+ Mutados limpios:",hijosMutados)
+
 
 def binario_a_decimal(numero_binario):
 	numero_decimal = 0 
