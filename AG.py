@@ -346,16 +346,24 @@ def formula(valor):
     xi = minimo + x
     return xi
 
-def funcion(x):
+def funcion(xs):
+    ap = []
     #0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)
-    multi = 0.50 * x
-    cose = math.cos(multi)
-    seno = math.sin(multi)
-    sen_cos = seno * cose
-    multi2 = sen_cos * 0.25
-    cose2 = cose * 0.50
-    y = multi2 + cose2
-    return y
+    for i in range(len(xs)):
+        x = xs[i]
+        print(f"valore evaluado en esta iteracion es {i} con valor de {x}")
+        multi = 0.50 * x
+        cose = math.cos(multi)
+        seno = math.sin(multi)
+        sen_cos = seno * cose
+        multi2 = sen_cos * 0.25
+        cose2 = cose * 0.50
+        y = multi2 + cose2
+        print("+ Ap:",y)
+        ap.append(y)
+
+
+        
     
 def calcular():
     global individuos, hijosAB1, hijosAB2, hijosMutados
@@ -365,6 +373,26 @@ def calcular():
         aptitud = formula(convertirDecimal)
         xs.append(aptitud)
     print("\n+ Aptitudes de individuos:",xs)
+
+    for i in range(len(hijosAB1)):
+        convertirDecimal = binario_a_decimal(hijosAB1[i])
+        aptitud = formula(convertirDecimal)
+        xs.append(aptitud)
+    print("+ Aptitudes de hijos AB1:",xs)
+
+    for i in range(len(hijosAB2)):
+        convertirDecimal = binario_a_decimal(hijosAB2[i])
+        aptitud = formula(convertirDecimal)
+        xs.append(aptitud)
+    print("+ Aptitudes de hijos AB2:",xs)
+
+    for i in range(len(hijosMutados)):
+        convertirDecimal = binario_a_decimal(hijosMutados[i])
+        aptitud = formula(convertirDecimal)
+        xs.append(aptitud)
+    print("+ Aptitudes de hijos mutados:",xs)
+
+    funcion(xs) 
 
     #Continuar aplicando aptitud para los demas hijos
 
