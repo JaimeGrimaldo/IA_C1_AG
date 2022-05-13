@@ -243,6 +243,14 @@ def limpieza():
     global hijosMutados, hijosAB1, hijosAB2, individuos
     
     iE = e_indice1.get()
+
+
+    diferenciar_indice = iE.split(",")
+    iE1 = int(diferenciar_indice[0])
+    iE2 = int(diferenciar_indice[1])
+    print("De estos tipos son",type(iE2),type(iE1))
+    print("Esto vale iE1:",iE1,"\nEsto vale IE2",iE2)
+
     print("\n")
     print("+ Individuos iniciales:",individuos)
     print("+ Hijos AB1:",hijosAB1)
@@ -251,21 +259,33 @@ def limpieza():
 
     for i in range(len(hijosMutados)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosMutados[i])
-        if numDecimal > int(iE):
+        if numDecimal < iE1:
             print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
             hijosMutados.pop(i)
-
+        if numDecimal > iE2:
+            print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
+            hijosMutados.pop(i)
+    
+    
     for i in range(len(hijosAB1)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosAB1[i])
-        if numDecimal > int(iE):
+        if numDecimal < iE1:
+            print("- El numero",hijosAB1[i],"excede el limite con decimal",numDecimal)
+            hijosAB1.pop(i)
+        if numDecimal > iE2:
             print("- El numero",hijosAB1[i],"excede el limite con decimal",numDecimal)
             hijosAB1.pop(i)
 
     for i in range(len(hijosAB2)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosAB2[i])
-        if numDecimal > int(iE):
+        if numDecimal < iE1:
             print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
             hijosAB2.pop(i)
+        if numDecimal > iE2:
+            print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
+            hijosAB2.pop(i)
+    
+    
 
     print("\n")
     print("+ Hijos limpios AB1:",hijosAB1)
