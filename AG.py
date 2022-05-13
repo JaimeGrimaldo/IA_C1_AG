@@ -27,9 +27,13 @@ e_indice = Entry(ventana, font=("Arial 18"))
 
 e_indice1 = Entry(ventana, font=("Arial 12"))
 e_mutacion = Entry(ventana, font=("Arial 12"))
+e_generaciones = Entry(ventana, font=("Arial 12"))
 #e_indice.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
 e_mutacion.grid(row=5, column=1, columnspan=1, padx=5, pady=5)
 e_indice1.grid(row=6, column=1, columnspan=1, padx=5, pady=5)
+e_generaciones.grid(row=7, column=1, columnspan=1, padx=5, pady=5)
+
+
 
 #Etiquetas
 texto_1 = Label(ventana, font=("Bebas 20"), text="Algoritmo Genetico - Max Min")
@@ -53,14 +57,17 @@ texto_indice.grid(row=5, column=0, padx=5, pady=5)
 texto_indice1 = Label(ventana, font=("Arial 12"), text="IE:")
 texto_indice1.grid(row=6, column=0, padx=5, pady=5)
 
+texto_generaciones = Label(ventana, font=("Arial 12"), text="Generaciones:")
+texto_generaciones.grid(row=7, column=0, padx=5, pady=5)
+
 texto_vacio = Label(ventana, font=("Arial 8"), text=" ")
-texto_vacio.grid(row=7, column=0, padx=5, pady=1)
+texto_vacio.grid(row=8, column=0, padx=5, pady=1)
 
 #Boton 
 boton_iniciar = Button(ventana, text="INICIAR", width=10, height=1, font=("Arial 18"), command = lambda: extraerDatos())
-boton_iniciar.grid(row=7, column=0, columnspan=2)
+boton_iniciar.grid(row=9, column=0, columnspan=2)
 
-#Variables
+#Variables globales
 correr_programa = False
 parejas = []
 bitaje = 0
@@ -68,7 +75,10 @@ hijosMutados = []
 hijosAB1 = []
 hijosAB2 = []
 individuos = []
+mejor = []
+peor = []
 def extraerDatos():
+    generaciones = e_generaciones.get()
     poblacion_inicial = e_poblacionInicial.get()
     poblacion_maxima = e_poblacionMaxima.get()
     precision = e_precision.get()
@@ -81,7 +91,8 @@ def extraerDatos():
         validarDatos(poblacion_maxima, poblacion_inicial)
 
     if correr_programa:
-        proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice)
+        for i in range(int(generaciones)):
+            proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice)
     else:
         print("> ERROR: Hay problemas con los datos de entrada, no es posible avanzar con el AG.")
 
@@ -347,11 +358,12 @@ def formula(valor):
     return xi
 
 def funcion(xs):
+    global mejor, peor
     ap = []
     #0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)
     for i in range(len(xs)):
         x = xs[i]
-        print(f"valore evaluado en esta iteracion es {i} con valor de {x}")
+        #print(f"valore evaluado en esta iteracion es {i} con valor de {x}")
         multi = 0.50 * x
         cose = math.cos(multi)
         seno = math.sin(multi)
@@ -359,18 +371,40 @@ def funcion(xs):
         multi2 = sen_cos * 0.25
         cose2 = cose * 0.50
         y = multi2 + cose2
+
         print("+ Ap:",y)
         ap.append(y)
+    minimoAptitud = 0
+    peorA = 0
+    for i in range(len(ap)):
+        if i == 0:
+            peorA = ap[i]
+            minimoAptitud = ap[i]
+        else:
+            if peorA < ap[i]:
+                peor.append(peorA)
+                mejor.append(ap[i])
+            else: 
+                mejor.append(peorA)
+                peor.append(ap[i])
+
+            if minimoAptitud > ap[i]:
+                minimoAptitud = ap[i]
+            
+    mejor.sort()
+    peor.sort(reverse=True)
+    print("+ Mejores:",mejor,"\n+ Peores:",peor)
 
 
-        
-    
+
+
 def calcular():
     global individuos, hijosAB1, hijosAB2, hijosMutados
     xs = []
     for i in range(len(individuos)):
         convertirDecimal = binario_a_decimal(individuos[i])
         aptitud = formula(convertirDecimal)
+
         xs.append(aptitud)
     print("\n+ Aptitudes de individuos:",xs)
 
@@ -393,8 +427,6 @@ def calcular():
     print("+ Aptitudes de hijos mutados:",xs)
 
     funcion(xs) 
-
-    #Continuar aplicando aptitud para los demas hijos
 
 
 

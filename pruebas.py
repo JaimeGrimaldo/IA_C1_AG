@@ -16,6 +16,8 @@ def ver():
 #ver()
 
 def probarLista():
+
+    """""
     dato = 0
     lista = []
     for i in range(10):
@@ -24,4 +26,8 @@ def probarLista():
 
     lista.remove(5)
     print(lista)
+    """""
+    num = [5,4,7,9,4,10,3,0]
+    num.sort()
+    print(num)
 probarLista()
