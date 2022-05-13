@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter import font
 import random
 from tkinter import messagebox
+import math
 
 
 ventana = Tk()
@@ -244,7 +245,6 @@ def limpieza():
     
     iE = e_indice1.get()
 
-
     diferenciar_indice = iE.split(",")
     iE1 = int(diferenciar_indice[0])
     iE2 = int(diferenciar_indice[1])
@@ -266,7 +266,7 @@ def limpieza():
             print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
             hijosMutados.pop(i)
     
-    
+
     for i in range(len(hijosAB1)-1,-1,-1):
         numDecimal = binario_a_decimal(hijosAB1[i])
         if numDecimal < iE1:
@@ -284,9 +284,10 @@ def limpieza():
         if numDecimal > iE2:
             print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
             hijosAB2.pop(i)
-    
-    
 
+    
+    
+    
     print("\n")
     print("+ Hijos limpios AB1:",hijosAB1)
     print("+ Hijos limpios AB2:",hijosAB2)
@@ -300,6 +301,37 @@ def binario_a_decimal(numero_binario):
 		numero_decimal += int(digito_string) * 2 ** posicion
 
 	return numero_decimal
+
+
+
+def formula(valor):
+    precision = e_precision.get()
+    float(precision)
+    intervalo = e_intervalo.get()
+    separarInervalo = intervalo.split(",")
+    x1 = int(separarInervalo[0])
+    x2 = int(separarInervalo[1])
+    minimo = 0
+    if x1 < x2:
+        minimo = x1
+    else:
+        minimo = x2
+    x = valor * precision
+    xi = minimo + x
+    return xi
+
+def funcion(x):
+    a = "0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)"
+    multi = 0.50 * x
+    cose = math.cos(multi)
+    seno = math.sin(multi)
+    sen_cos = seno * cose
+    multi2 = sen_cos * 0.25
+    cose2 = cose * 0.50
+    y = multi2 + cose2
+    return y
+    
+
 
 
 
