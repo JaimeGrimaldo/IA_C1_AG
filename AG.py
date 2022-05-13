@@ -226,18 +226,32 @@ def cruzar():
 def mutacion(mutar):
     global hijosMutados
     guardar = ""
+    bandera = False
     print("+ Hola acá vamos a mutar a:",mutar)
+    
     for i in range(len(mutar)):
-        if mutar[i] == "1":
-          muatarString = "".join(mutar[i])
-          muatarString = muatarString.replace("1","0")
-          guardar = guardar + muatarString
-
-        else:
-            if mutar[i] == "0":
+        prob_mutacion = random.uniform(0,1)
+        prob_mutaconG = random.uniform(0,1)
+        if prob_mutaconG <= prob_mutacion:
+            if mutar[i] == "1":
                 muatarString = "".join(mutar[i])
-                muatarString = muatarString.replace("0","1")
+                muatarString = muatarString.replace("1","0")
                 guardar = guardar + muatarString
+            else:
+                if mutar[i] == "0":
+                    muatarString = "".join(mutar[i])
+                    muatarString = muatarString.replace("0","1")
+                    guardar = guardar + muatarString
+        else:
+            if mutar[i] == "1":
+                muatarString = "".join(mutar[i])
+                muatarString = muatarString.replace("1","1")
+                guardar = guardar + muatarString
+            else:
+                if mutar[i] == "0":
+                    muatarString = "".join(mutar[i])
+                    muatarString = muatarString.replace("0","0")
+                    guardar = guardar + muatarString
     print("+ Se ha transformado en:",guardar)
     hijosMutados.append(guardar)
 
@@ -266,6 +280,15 @@ def limpieza():
         if numDecimal > iE2:
             print("- El numero",hijosMutados[i],"excede el limite con decimal",numDecimal)
             hijosMutados.pop(i)
+
+    for i in range(len(individuos)-1,-1,-1):
+        numDecimal = binario_a_decimal(individuos[i])
+        if numDecimal < iE1:
+            print("- El numero",individuos[i],"excede el limite con decimal",numDecimal)
+            individuos.pop(i)
+        if numDecimal > iE2:
+            print("- El numero",individuos[i],"excede el limite con decimal",numDecimal)
+            individuos.pop(i)
     
 
     for i in range(len(hijosAB1)-1,-1,-1):
@@ -342,6 +365,8 @@ def calcular():
         aptitud = formula(convertirDecimal)
         xs.append(aptitud)
     print("\n+ Aptitudes de individuos:",xs)
+
+    #Continuar aplicando aptitud para los demas hijos
 
 
 
