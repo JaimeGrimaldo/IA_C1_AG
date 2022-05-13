@@ -221,6 +221,7 @@ def cruzar():
             mutacion(mutar_individuo)
     print("Estos son todos los mutados:",hijosMutados)
     limpieza()
+    calcular()
 
 def mutacion(mutar):
     global hijosMutados
@@ -306,7 +307,6 @@ def binario_a_decimal(numero_binario):
 
 def formula(valor):
     precision = e_precision.get()
-    float(precision)
     intervalo = e_intervalo.get()
     separarInervalo = intervalo.split(",")
     x1 = int(separarInervalo[0])
@@ -316,12 +316,15 @@ def formula(valor):
         minimo = x1
     else:
         minimo = x2
-    x = valor * precision
+    x = (valor * float(precision))
+    #print("- Esto tiene valor:",valor)
+    #print("- Valor de x",x,"Tipo:",type(x))
+    #print("- Valor de minimo",minimo,"Tipo:",type(minimo))
     xi = minimo + x
     return xi
 
 def funcion(x):
-    a = "0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)"
+    #0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)
     multi = 0.50 * x
     cose = math.cos(multi)
     seno = math.sin(multi)
@@ -331,6 +334,14 @@ def funcion(x):
     y = multi2 + cose2
     return y
     
+def calcular():
+    global individuos, hijosAB1, hijosAB2, hijosMutados
+    xs = []
+    for i in range(len(individuos)):
+        convertirDecimal = binario_a_decimal(individuos[i])
+        aptitud = formula(convertirDecimal)
+        xs.append(aptitud)
+    print("\n+ Aptitudes de individuos:",xs)
 
 
 
