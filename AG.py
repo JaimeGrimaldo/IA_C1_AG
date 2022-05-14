@@ -357,13 +357,23 @@ def formula(valor):
     xi = minimo + x
     return xi
 
-def funcion(xs):
+def funcion(xs, xHijosAB1, xHijosAB2, xMutados):
+    global individuos, hijosAB1, hijosAB2, hijosMutados
+    cantidadIndividuos = len(xs)
+    cantidadHijosAB1 = len(hijosAB1)
+    cantidadHijosAB2 = len(hijosAB2)
+    cantidadMutaddos = len(hijosMutados)
+    poblacionTotal = cantidadIndividuos + cantidadHijosAB1 + cantidadHijosAB2 + cantidadMutaddos
+    pMaxima = e_poblacionMaxima.get()
+    pMaxima = int(pMaxima)
     global mejor, peor
     ap = []
+    apAB1 = []
+    apAB2 = []
+    apMutados = []
     #0.25Cos(0.50x)Sen(0.50x) + 0.50Cos(0.50x)
     for i in range(len(xs)):
         x = xs[i]
-        #print(f"valore evaluado en esta iteracion es {i} con valor de {x}")
         multi = 0.50 * x
         cose = math.cos(multi)
         seno = math.sin(multi)
@@ -371,9 +381,45 @@ def funcion(xs):
         multi2 = sen_cos * 0.25
         cose2 = cose * 0.50
         y = multi2 + cose2
-
-        print("+ Ap:",y)
+        #print("+ Ap individuos:",y)
         ap.append(y)
+
+    for i in range(len(xHijosAB1)):
+        x = xHijosAB1[i]
+        multi = 0.50 * x
+        cose = math.cos(multi)
+        seno = math.sin(multi)
+        sen_cos = seno * cose
+        multi2 = sen_cos * 0.25
+        cose2 = cose * 0.50
+        y = multi2 + cose2
+        #print("+ Ap individuos:",y)
+        apAB1.append(y)
+
+    for i in range(len(xHijosAB2)):
+        x = xHijosAB2[i]
+        multi = 0.50 * x
+        cose = math.cos(multi)
+        seno = math.sin(multi)
+        sen_cos = seno * cose
+        multi2 = sen_cos * 0.25
+        cose2 = cose * 0.50
+        y = multi2 + cose2
+        #print("+ Ap individuos:",y)
+        apAB2.append(y)
+        
+    for i in range(len(xMutados)):
+        x = xMutados[i]
+        multi = 0.50 * x
+        cose = math.cos(multi)
+        seno = math.sin(multi)
+        sen_cos = seno * cose
+        multi2 = sen_cos * 0.25
+        cose2 = cose * 0.50
+        y = multi2 + cose2
+        #print("+ Ap individuos:",y)
+        apMutados.append(y)
+
     minimoAptitud = 0
     peorA = 0
     for i in range(len(ap)):
@@ -390,6 +436,10 @@ def funcion(xs):
 
             if minimoAptitud > ap[i]:
                 minimoAptitud = ap[i]
+    
+    if poblacionTotal > pMaxima:
+        #Podar no aptos
+        pass
             
     mejor.sort()
     peor.sort(reverse=True)
@@ -401,6 +451,9 @@ def funcion(xs):
 def calcular():
     global individuos, hijosAB1, hijosAB2, hijosMutados
     xs = []
+    xHijosAB1 = []
+    xHijosAB2 = []
+    xMutados = []
     for i in range(len(individuos)):
         convertirDecimal = binario_a_decimal(individuos[i])
         aptitud = formula(convertirDecimal)
@@ -411,24 +464,38 @@ def calcular():
     for i in range(len(hijosAB1)):
         convertirDecimal = binario_a_decimal(hijosAB1[i])
         aptitud = formula(convertirDecimal)
-        xs.append(aptitud)
-    print("+ Aptitudes de hijos AB1:",xs)
+        xHijosAB1.append(aptitud)
+    print("+ Aptitudes de hijos AB1:",xHijosAB1)
 
     for i in range(len(hijosAB2)):
         convertirDecimal = binario_a_decimal(hijosAB2[i])
         aptitud = formula(convertirDecimal)
-        xs.append(aptitud)
-    print("+ Aptitudes de hijos AB2:",xs)
+        xHijosAB2.append(aptitud)
+    print("+ Aptitudes de hijos AB2:",xHijosAB2)
 
     for i in range(len(hijosMutados)):
         convertirDecimal = binario_a_decimal(hijosMutados[i])
         aptitud = formula(convertirDecimal)
-        xs.append(aptitud)
-    print("+ Aptitudes de hijos mutados:",xs)
+        xMutados.append(aptitud)
+    print("+ Aptitudes de hijos mutados:",xMutados)
 
-    funcion(xs) 
+    funcion(xs, xHijosAB1, xHijosAB2, xMutados) 
 
+def calculoDescriptivo(individuo):
+    convertirDecimal = binario_a_decimal(individuos[i])
+    aptitud = formula(convertirDecimal)
+    print("\n+ Aptitud:",aptitud)
+    return aptitud
 
+def funcionIndividual(x):
+    multi = 0.50 * x
+    cose = math.cos(multi)
+    seno = math.sin(multi)
+    sen_cos = seno * cose
+    multi2 = sen_cos * 0.25
+    cose2 = cose * 0.50
+    y = multi2 + cose2
+    return y
 
 
 def poda():
