@@ -1,10 +1,11 @@
+from cProfile import label
 from code import interact
 from tkinter import *
 from tkinter import font
 import random
 from tkinter import messagebox
 import math
-
+import matplotlib.pyplot as plt
 
 ventana = Tk()
 ventana.title("191214 - Grimaldo Moreno - IA - IDS")
@@ -93,6 +94,7 @@ def extraerDatos():
     if correr_programa:
         for i in range(int(generaciones)):
             proceso(poblacion_inicial, poblacion_maxima, precision, intervalo, indice)
+        graficar()
     else:
         print("> ERROR: Hay problemas con los datos de entrada, no es posible avanzar con el AG.")
 
@@ -169,6 +171,7 @@ def calcularBits(num_puntos, poblacion_inicial, indice, intervalo):
         int(individuo)
         individuos.append(individuo)
         individuo = ""
+    individuos = list(set(individuos))
     return individuos, numBits
 
 def seleccion(num_puntos, poblacion_inicial, indice, intervalo):
@@ -231,6 +234,8 @@ def cruzar():
             mutar_individuo = hijosAB2[i]
             mutacion(mutar_individuo)
     print("Estos son todos los mutados:",hijosMutados)
+    hijosAB1 = list(set(hijosAB1))
+    hijosAB2 = list(set(hijosAB2))
     limpieza()
     calcular()
 
@@ -265,6 +270,7 @@ def mutacion(mutar):
                     guardar = guardar + muatarString
     print("+ Se ha transformado en:",guardar)
     hijosMutados.append(guardar)
+    hijosMutados = list(set(hijosMutados))
 
 def limpieza():
     global hijosMutados, hijosAB1, hijosAB2, individuos
@@ -320,9 +326,6 @@ def limpieza():
             print("- El numero",hijosAB2[i],"excede el limite con decimal",numDecimal)
             hijosAB2.pop(i)
 
-    
-    
-    
     print("\n")
     print("+ Hijos limpios AB1:",hijosAB1)
     print("+ Hijos limpios AB2:",hijosAB2)
@@ -351,9 +354,6 @@ def formula(valor):
     else:
         minimo = x2
     x = (valor * float(precision))
-    #print("- Esto tiene valor:",valor)
-    #print("- Valor de x",x,"Tipo:",type(x))
-    #print("- Valor de minimo",minimo,"Tipo:",type(minimo))
     xi = minimo + x
     return xi
 
@@ -438,26 +438,27 @@ def funcion(xs, xHijosAB1, xHijosAB2, xMutados):
                 minimoAptitud = ap[i]
     
     if poblacionTotal > pMaxima:
-        #Podar no aptos
-        pass
+        poda()
             
     mejor.sort()
-    peor.sort(reverse=True)
-    print("+ Mejores:",mejor,"\n+ Peores:",peor)
+    peor.sort()
+    print("+ Mejores:",mejor,"\n\n+ Peores:",peor)
+    print("+ Individuos actualizados:",individuos,"\n+ Hijos AB1 actualizados:",hijosAB1, "\n+ Hijos AB2",hijosAB2, "\n+ Mutados: ",hijosMutados)
 
 
 
 
-def calcular():
+
+def calcular(): #Sacar aptitudes/Fitness de cada individuo
     global individuos, hijosAB1, hijosAB2, hijosMutados
     xs = []
     xHijosAB1 = []
     xHijosAB2 = []
     xMutados = []
+
     for i in range(len(individuos)):
         convertirDecimal = binario_a_decimal(individuos[i])
         aptitud = formula(convertirDecimal)
-
         xs.append(aptitud)
     print("\n+ Aptitudes de individuos:",xs)
 
@@ -481,10 +482,10 @@ def calcular():
 
     funcion(xs, xHijosAB1, xHijosAB2, xMutados) 
 
-def calculoDescriptivo(individuo):
-    convertirDecimal = binario_a_decimal(individuos[i])
+def calculoDescriptivo(individuo): #Recalcular para buscar individuos no adecuados
+    convertirDecimal = binario_a_decimal(individuo)
     aptitud = formula(convertirDecimal)
-    print("\n+ Aptitud:",aptitud)
+    #print("\n+ Aptitud:",aptitud)
     return aptitud
 
 def funcionIndividual(x):
@@ -495,20 +496,65 @@ def funcionIndividual(x):
     multi2 = sen_cos * 0.25
     cose2 = cose * 0.50
     y = multi2 + cose2
+    print("+ Resultado Y:",y)
     return y
 
 
 def poda():
-    pass
-        
+    for i in range(len(individuos)-1,-1,-1):
+        aptitudIndividuos = calculoDescriptivo(individuos[i])
+        fitnessIndividuos = funcionIndividual(aptitudIndividuos)
+        for j in range(len(peor)):
+            if fitnessIndividuos == peor[j]:
+                print("Se sacara al individuo:",individuos[i])
+                individuos.pop(i)
+                break
+
+    for i in range(len(hijosAB1)-1,-1,-1):
+        aptitudIndividuos = calculoDescriptivo(hijosAB1[i])
+        fitnessIndividuos = funcionIndividual(aptitudIndividuos)
+        for j in range(len(peor)):
+            if fitnessIndividuos == peor[j]:
+                print("Se sacara al individuo:",hijosAB1[i])
+                hijosAB1.pop(i)
+                break
+
+    for i in range(len(hijosAB2)-1,-1,-1):
+        aptitudIndividuos = calculoDescriptivo(hijosAB2[i])
+        fitnessIndividuos = funcionIndividual(aptitudIndividuos)
+        for j in range(len(peor)):
+            if fitnessIndividuos == peor[j]:
+                print("Se sacara al individuo:",hijosAB2[i])
+                hijosAB2.pop(i)
+                break
+
+    for i in range(len(hijosMutados)-1,-1,-1):
+        aptitudIndividuos = calculoDescriptivo(hijosMutados[i])
+        fitnessIndividuos = funcionIndividual(aptitudIndividuos)
+        for j in range(len(peor)):
+            if fitnessIndividuos == peor[j]:
+                print("Se sacara al individuo:",hijosMutados[i])
+                hijosMutados.pop(i)
+                break
+    
 
 
+mejoresGen = []
+peoresGen = []
 
-        
-
-
-
-
+  
+def graficar():
+    global mejor, peor
+    plt.title("Grafica individuos")
+    plt.plot(mejor,label="Mejor",color="green")
+    plt.xlabel("Generaciones")
+    plt.ylabel("Evolución de aptitudes")
+    plt.ioff()
+    plt.ion()
+    plt.plot(peor,label="Peor",color="red")
+    plt.ioff()
+    plt.legend()
+    plt.show()
 
 
 
