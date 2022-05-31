@@ -216,9 +216,9 @@ def SeleccionarMejores(x1, x2):
             mejorFitness = listaInicial[0].get("Fitness")
             peorFitness = listaInicial[0].get("Fitness")
         else:
-            if mejorFitness < listaInicial[i].get("Fitness"):
+            if mejorFitness > listaInicial[i].get("Fitness"):
                 mejorFitness = listaInicial[i].get("Fitness")
-            if peorFitness > listaInicial[i].get("Fitness"):
+            if peorFitness < listaInicial[i].get("Fitness"):
                 peorFitness = listaInicial[i].get("Fitness")
     mejores = (
         {
@@ -396,7 +396,7 @@ def Mutacion(x1, x2, maxPoblacion):
                 "Fitness Hijo": fitness,
             },
         )
-        if listaAptitud[i].get("Fitness Hijo") > listaAptitud[i].get("Fitness Padre"):
+        if listaAptitud[i].get("Fitness Hijo") < listaAptitud[i].get("Fitness Padre"):
             listaAptitud[i].update(
                 {
                     "Mejor fitness": listaAptitud[i].get("Fitness Hijo"),
@@ -470,7 +470,7 @@ def Actualizar(auxMutado, maxPoblacion):
 def ControlPoblacion(contadorControl):
     global listaInicial, listaAptitud
     for i in range(contadorControl):
-        if listaAptitud[i].get("Fitness Hijo") > listaAptitud[i].get("Fitness Padre"):
+        if listaAptitud[i].get("Fitness Hijo") < listaAptitud[i].get("Fitness Padre"):
             listaInicial[i].update(
                 {
                     "Poblacion Inicial X": listaAptitud[i].get("Hijo X"),
