@@ -83,7 +83,7 @@ def Fitness(x):
     return y
 
 
-def TamanioBitX(x1, x2, precision):  # ? Calcular tamaño de los individuos (bitaje)
+def Bitaje(x1, x2, precision):  # ? Calcular tamaño de los individuos (bitaje)
     global deltaX
     intervalo = abs(x2-x1)
     valores = intervalo / precision
@@ -152,7 +152,7 @@ def GenerarPoblacion(tamanioPoblacion, bitaje):
         TablaCruza = (
             {
                 "ID": i,
-                "Mating Pool X": poblacionInicial[i],
+                "Auxiliar Individuo": poblacionInicial[i],
                 "Punto de cruza X": 0,
                 "Despues de cruza X": 0,
                 "Decimal": 0,
@@ -244,7 +244,7 @@ def SeleccionarMejores(x1, x2):
     for i in range(len(listaInicial)):
         listaCruza[i].update(
             {
-                "Mating Pool X": listaInicial[i].get("Poblacion Inicial X"),
+                "Auxiliar Individuo": listaInicial[i].get("Poblacion Inicial X"),
             }
         )
         listaAptitud[i].update(
@@ -263,13 +263,13 @@ def Cruza(bitaje, x1, x2):
     auxCadena2X = ""
 
     for i in range(0, len(listaCruza), 2):
-        tamanioX = len(listaCruza[i].get("Mating Pool X"))
-        tamanio2X = len(listaCruza[i+1].get("Mating Pool X"))
+        tamanioX = len(listaCruza[i].get("Auxiliar Individuo"))
+        tamanio2X = len(listaCruza[i+1].get("Auxiliar Individuo"))
         corte = random.randint(1, bitaje)
-        cadena1X = listaCruza[i].get("Mating Pool X")[0:corte]
-        cadena2X = listaCruza[i+1].get("Mating Pool X")[0:corte]
-        auxCadena1X = listaCruza[i].get("Mating Pool X")[corte:tamanioX]
-        auxCadena2X = listaCruza[i+1].get("Mating Pool X")[corte:tamanio2X]
+        cadena1X = listaCruza[i].get("Auxiliar Individuo")[0:corte]
+        cadena2X = listaCruza[i+1].get("Auxiliar Individuo")[0:corte]
+        auxCadena1X = listaCruza[i].get("Auxiliar Individuo")[corte:tamanioX]
+        auxCadena2X = listaCruza[i+1].get("Auxiliar Individuo")[corte:tamanio2X]
         cadena1X = cadena1X + auxCadena2X
         cadena2X = cadena2X + auxCadena1X
 
@@ -430,7 +430,7 @@ def Actualizar(auxMutado, maxPoblacion):
             TablaCruza = (
                 {
                     "ID": contadorControl-1,
-                    "Mating Pool X": auxMutado[i].get("Mutado X"),
+                    "Auxiliar Individuo": auxMutado[i].get("Mutado X"),
                     "Punto de cruza X": 0,
                     "Despues de cruza X": 0,
                     "Decimal": 0,
@@ -498,18 +498,18 @@ def Clasificar(generaciones):
         fenotipoX.append(listaMejores[i].get("FenotipoX"))
 
 
-def GenerarGrafica(x, y, z, fenX):
+def GenerarGrafica(mejor, peor, promedio, fenX):
     plt.title(f'Coordenadas del mejor caso: X ={fenX}')
-    plt.plot(x, label="Mejor caso", color="Green")  # Dibuja el gráfico
+    plt.plot(mejor, label="Mejor", color="Blue")  # Dibuja el gráfico
     plt.xlabel("Generaciones")  # Inserta el título del eje X
     plt.ylabel("Evolucion del Fitness")  # Inserta el título del eje Y
     plt.ioff()  # Desactiva modo interactivo de dibujo
     plt.ion()  # Activa modo interactivo de dibujo
     # Dibuja datos de lista2 sin borrar datos de lista1
-    plt.plot(y, label="Peor caso", color="Pink")
+    plt.plot(peor, label="Peor", color="Pink")
     plt.ioff()  # Desactiva modo interactivo
     plt.ion()  # Activa modo interactivo de dibujo
-    plt.plot(z, label="Caso promedio", color="Orange")
+    plt.plot(promedio, label="Promedio", color="Orange")
     # Dibuja datos de lista2 sin borrar datos de lista1
     plt.ioff()  # Desactiva modo interactivo
     # plt.plot(lista3)   # No dibuja datos de lista3
@@ -548,11 +548,11 @@ def VerMejores():
 
 def Empezar(x1, x2, precision, tamanioPoblacion, maximoPoblacion, generacion):
     global contadorGeneracion, listaGeneracion
-    cadenaX = TamanioBitX(x1, x2, precision)
+    cadenaX = Bitaje(x1, x2, precision)
     GenerarPoblacion(tamanioPoblacion, cadenaX)
     for i in range(generacion):
         contadorGeneracion += 1
-        print("Generacion no.", contadorGeneracion, "\n")
+        print("Generacion No.", contadorGeneracion, "\n")
         SeleccionarMejores(x1, x2)
         Cruza(cadenaX, x1, x2)
         Mutacion(x1, x2, maximoPoblacion)
