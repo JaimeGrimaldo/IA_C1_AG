@@ -11,6 +11,7 @@ cPC = [9,10,9,10,9] #? Cantidad paquetes por categoria
 individuo = []
 listaPesos = []
 listaPrecio = []
+
 def IniciarDatos():
     pPI = 0.30 #? Probabilidad por individuo
     pPG = 0.5 #? Probabilidad por Génotipo
@@ -21,7 +22,8 @@ def IniciarDatos():
     GenerarIniciales(pI)
     Cruzar(pM)
     Mutacion(pPI, pPG)
-    Calcular(contenedor)
+    #Calcular(contenedor)
+    VerPasados(contenedor)
 
 def GenerarIniciales(pI):
     global individuo, categorias, cPC
@@ -55,7 +57,8 @@ def GenerarIniciales(pI):
     print(entablar)
             
 def Calcular(contenedor):
-    global individuo, categorias, cPC, preciosPublicos
+    global individuo, categorias, cPC, preciosPublicos, listaPesos, listaPrecio
+    recuento = []
     for i in range(len(individuo)):
         contadorPesoA = 0
         contadorPesoB = 0
@@ -69,7 +72,7 @@ def Calcular(contenedor):
         contadorC = 0
         contadorD = 0
         contadorE = 0
-        pPA, pPB, pPC, pPD, pPE = 0,0,0,0,0
+        pPA, pPB, pPCc, pPD, pPE = 0,0,0,0,0
         for j in range(len(individuo[i])):
             if individuo[i][j] == "A":
                 contadorPesoA += 7*cPC[0]
@@ -89,20 +92,88 @@ def Calcular(contenedor):
             pesoGeneral += contadorPesoA + contadorPesoB + contadorPesoC + contadorPesoD + contadorPesoE
             pPA += preciosPublicos[0]*contadorA
             pPB += preciosPublicos[1]*contadorB
-            pPC += preciosPublicos[2]*contadorC
+            pPCc += preciosPublicos[2]*contadorC
             pPD += preciosPublicos[3]*contadorD
             pPE += preciosPublicos[4]*contadorE
-            pP += pPA + pPB + pPC + pPD + pPE
+            pP += pPA + pPB + pPCc + pPD + pPE
             if pesoGeneral > contenedor:
-                print("El peso es de:",pesoGeneral,"| Rebasa por:",pesoGeneral-contenedor,"| En el indice:",j)
-                print("Precio publico total:",pP,"\n Costo publico A:",pPA,"Costo publico B:",pPB,"Costo publico C:",pPC,"Costo publico D:",pPD,"Costo publico E:",pPE)
-                print("Cantidad de A:",contadorA)
-                print("Cantidad de B:",contadorB)
-                print("Cantidad de C:",contadorC)
-                print("Cantidad de D:",contadorD)
-                print("Cantidad de E:",contadorE)
-                break
+               #print("El peso es de:",pesoGeneral,"| Rebasa por:",pesoGeneral-contenedor,"| En el indice:",j)
+                #print("Precio publico total:",pP)
+                #indicesExcedieron.append(j)
+                #listaPesos.append(pesoGeneral)
+                #listaPrecio.append(pP)
+                prepararDato = (individuo[i])
+                #print("Esto tiene linea 107:",individuo[i])
+                recortado = prepararDato[0:j]
+                recuento.append(recortado)
+                break       
+    return recuento
         
+def VerPasados(contenedor):
+    costosTotales = []
+    ganancias = []
+    ind = Calcular(contenedor)
+    global individuo, listaPrecio, listaPesos, cPC, costosEnvios
+    for i in range(len(ind)):
+        #print("Tenemos esto:",ind[i])
+        contador_peso_a, contador_peso_b, contador_peso_c, contador_peso_d, contador_peso_e = 0,0,0,0,0
+        precio_publico, peso_paquete = 0,0
+        contador_a, contador_b, contador_c, contador_d, contador_e = 0,0,0,0,0
+        pPA, pPB, pPCc, pPD, pPE = 0,0,0,0,0
+        costoEnvioA, costoEnvioB, costoEnvioC, costoEnvioD, costoEnvioE = 0,0,0,0,0
+        for j in range(len(ind[i])):
+            if ind[i][j] == "A":
+                contador_peso_a += 7*cPC[0]
+                contador_a += 1
+                costoEnvioA += 1
+            if ind[i][j] == "B":
+                contador_peso_b += 11*cPC[1]
+                contador_b += 1
+                costoEnvioB += 1
+            if ind[i][j] == "C":
+                contador_peso_c += 9*cPC[2]
+                contador_c += 1
+                costoEnvioC += 1
+            if ind[i][j] == "D":
+                contador_peso_d += 5*cPC[3]
+                contador_d += 1
+                costoEnvioD += 1
+            if ind[i][j] == "E":
+                contador_peso_e += 7*cPC[4]
+                contador_e += 1
+                costoEnvioE += 1
+            peso_paquete += contador_peso_a + contador_peso_b + contador_peso_c + contador_peso_d + contador_peso_e
+            pPA += preciosPublicos[0]*contador_a
+            pPB += preciosPublicos[1]*contador_b
+            pPCc += preciosPublicos[2]*contador_c
+            pPD += preciosPublicos[3]*contador_d
+            pPE += preciosPublicos[4]*contador_e
+            precio_publico += pPA + pPB + pPCc + pPD + pPE
+
+
+        envioA = costoEnvioA*costosEnvios[0]
+        envioB = costoEnvioB*costosEnvios[1]
+        envioC = costoEnvioC*costosEnvios[2]
+        envioD = costoEnvioD*costosEnvios[3]
+        envioE = costoEnvioE*costosEnvios[4]
+        costoEnvioTotal = envioA + envioB + envioC + envioD + envioE
+
+        
+        costosTotales.append(costoEnvioTotal)
+        listaPesos.append(peso_paquete)
+        listaPrecio.append(precio_publico)
+
+        ganancia = listaPrecio[i]-costosTotales[i]
+        ganancias.append(ganancia)
+
+    print("Paquete:",ind)
+    print("Peso de paquete:",listaPesos)
+    print("Precio publico:",listaPrecio)
+    print("El costo de envio es:",costosTotales)
+    print("Las ganancias son:",ganancias)
+
+            
+
 def Cruzar(pM):
     global individuo, categorias
     indicesReferencia = []
